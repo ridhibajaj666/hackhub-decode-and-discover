@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DECODE AND DISCOVER</title>
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .disabled {
+      opacity: 0.4;
+    }
+
+    .disabled button {
+      pointer-events: none;
+    }
+  </style>
+</head>
+
+<body class="login-page">
+
+  <!-- LOGIN PAGE -->
+  <div class="login-container" id="loginPage">
+    <h1>🔒 DECODE AND DISCOVER</h1>
+    <form onsubmit="return loginUser(event)">
+      <input type="text" placeholder="Your Name" required>
+      <input type="text" placeholder="Your Branch" required>
+      <input type="text" placeholder="Year" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+  <!-- RULES PAGE -->
+  <div class="rules-container" id="rulesPage" style="display:none;">
+    <h1>⚠️ Rules & Instructions</h1>
+
+    <div class="rules-box">
+      <h2>General Rules</h2>
+      <ul>
+        <li>No switching tabs or refreshing the page.</li>
+        <li>Each round is time-bound.</li>
+        <li>Do not share answers.</li>
+        <li>Organizer decision is final.</li>
+        <li>Fill the Google Form after Round 1 and Round 3.</li>
+      </ul>
+    </div>
+
+    <div class="rules-box">
+      <h2>Round 1</h2>
+      <p>Complete the mini CTF challenge within 15 minutes.</p>
+    </div>
+
+    <div class="rules-box">
+      <h2>Round 2</h2>
+      <p>Simple MCQ based on cybersecurity concepts.</p>
+    </div>
+
+    <div class="rules-box">
+      <h2>Round 3</h2>
+      <p>
+        Find 3 hidden words (in code, images, or page).  
+        Take first 2 letters of each word and combine them for final answer.
+      </p>
+    </div>
+
+    <button onclick="goToRounds()">Proceed →</button>
+  </div>
+
+  <!-- ROUNDS PAGE -->
+  <div class="rounds-container" id="roundsPage" style="display:none;">
+    <h1>🧠 DECODE AND DISCOVER</h1>
+    <p>Complete all rounds within time</p>
+
+    <!-- ROUND 1 -->
+    <div class="round" id="round1">
+      <h2>Round 1</h2>
+      <p id="timer1">15:00</p>
+      <p class="round-rule">Complete to unlock next round</p>
+
+      <button>
+        <a href="https://anshxika.github.io/mini-ctf/" target="_blank">Start Round 1</a>
+      </button>
+
+      <button>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdom73BOBLnRkP6LXvzCyVO0q8mkRjM77EnU1lUCJuOcYfMQQ/viewform"
+          target="_blank">Submit Answer</a>
+      </button>
+    </div>
+
+    <!-- ROUND 2 -->
+    <div class="round disabled" id="round2">
+      <h2>Round 2</h2>
+      <p id="timer2">Locked</p>
+      <p class="round-rule">Unlocks after Round 1</p>
+
+      <button>
+        <a href="https://wayground.com/admin/assessment/69ebd040fc481f7779ac8b8c?source=lesson_share"
+          target="_blank">Start Round 2</a>
+      </button>
+    </div>
+
+    <!-- ROUND 3 -->
+    <div class="round disabled" id="round3">
+      <h2>Round 3</h2>
+      <p id="timer3">Locked</p>
+      <p class="round-rule">Final round</p>
+
+      <button>
+        <a href="https://ridhibajaj666.github.io/HACKHUB-DIGITAL-TREASURE-HUNT/" target="_blank">Start Round 3</a>
+      </button>
+
+      <button>
+        <a href="https://docs.google.com/forms/d/e/1FAIpQLSdom73BOBLnRkP6LXvzCyVO0q8mkRjM77EnU1lUCJuOcYfMQQ/viewform"
+          target="_blank">Submit Final Answer</a>
+      </button>
+    </div>
+  </div>
+
+  <!-- SCRIPT -->
+  <script>
+    function loginUser(e) {
+      e.preventDefault();
+      document.getElementById("loginPage").style.display = "none";
+      document.getElementById("rulesPage").style.display = "block";
+    }
+
+    function goToRounds() {
+      document.getElementById("rulesPage").style.display = "none";
+      document.getElementById("roundsPage").style.display = "block";
+      startRound(0);
+    }
+
+    let timers = [
+      { id: "round1", time: 15 * 60, next: "round2", display: "timer1" },
+      { id: "round2", time: 8 * 60, next: "round3", display: "timer2" },
+      { id: "round3", time: 15 * 60, next: null, display: "timer3" },
+    ];
+
+    function startRound(index) {
+      let round = timers[index];
+      let timerDisplay = document.getElementById(round.display);
+      let secondsLeft = round.time;
+
+      let interval = setInterval(() => {
+        if (secondsLeft < 0) {
+          clearInterval(interval);
+          timerDisplay.textContent = "Time's up!";
+
+          if (round.next) {
+            let nextRound = document.getElementById(round.next);
+            nextRound.classList.remove("disabled");
+            startRound(index + 1);
+          }
+          return;
+        }
+
+        let m = Math.floor(secondsLeft / 60);
+        let s = secondsLeft % 60;
+
+        timerDisplay.textContent =
+          `Time Left: ${m}:${s < 10 ? "0" : ""}${s}`;
+
+        secondsLeft--;
+
+      }, 1000);
+    }
+  </script>
+
+</body>
+
+</html>
